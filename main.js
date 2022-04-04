@@ -22,12 +22,13 @@ const mystery5 = [4, 9, 1, 3, 5, 4, 0, 4, 6, 3, 0, 7, 2, 5, 2, 3];
 // An array of all the arrays above
 const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, invalid3, invalid4, invalid5, mystery1, mystery2, mystery3, mystery4, mystery5];
 
+
 // Add your functions below:
 const validateCred = (ccNumIn) => {
   let multiplyByTwoFlag = false;
   let multiplyByTwoResult = 0;
   let sum = 0;
-  for (let i = ccNumIn.length-1; i >= 0; i -= 1) {
+  for (let i = ccNumIn.length-1; i >= 0; i--) {
     if (multiplyByTwoFlag) {
       multiplyByTwoResult = ccNumIn[i] * 2;
       if (multiplyByTwoResult > 9) {
@@ -41,16 +42,22 @@ const validateCred = (ccNumIn) => {
   }
   return (sum % 10 === 0) ? true : false;
 };
+// Test validateCred()
+console.log(validateCred(valid1));    // should return true
+console.log(validateCred(invalid1));  // should return false
 
 const findInvalidCards = (batchIn) => {
   const invalidCards = [];
   for (card of batchIn) {
-    if (validateCred(card) == false) {
+    if (!validateCred(card)) {
       invalidCards.push(card);
     }
   }
   return invalidCards;
 };
+// Test findInvalidCards();
+console.log(findInvalidCards([valid1, valid2, valid2, valid3, valid4]));            // should be empty
+console.log(findInvalidCards([invalid1, invalid2, invalid3, invalid4, invalid5]));  // should return all invalid arrays
 
 const idInvalidCardCompanies = (invalidCards) => {
   const invalidIssuers = [];
@@ -83,20 +90,6 @@ const idInvalidCardCompanies = (invalidCards) => {
   }
   return invalidIssuers;
 };
-
-// test
-/*
-console.log(validateCred(invalid1));
-testInvalidCards = findInvalidCards(batch);
-console.log(`${testInvalidCards.length} invalid credit cards found...`);
-console.log(testInvalidCards[0] === invalid1);
-console.log(testInvalidCards[1] === invalid2);
-console.log(testInvalidCards[2] === invalid3);
-console.log(testInvalidCards[3] === invalid4);
-console.log(testInvalidCards[4] === invalid5);
-console.log(testInvalidCards[5] === mystery1);
-console.log(testInvalidCards[6] === mystery3);
-console.log(testInvalidCards[7] === mystery4);
-const testCompanies = idInvalidCardCompanies(findInvalidCards(batch));
-console.log(testCompanies);
-*/
+// Test idInvalidCardCompanies
+console.log(idInvalidCardCompanies([invalid1]));  // should return 'Visa'
+console.log(idInvalidCardCompanies(batch));        // should return invalid card companies
