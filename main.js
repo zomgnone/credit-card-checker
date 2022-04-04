@@ -98,12 +98,13 @@ const idInvalidCardCompanies = (invalidCards) => {
 console.log('test idInvalidCardCompanies', idInvalidCardCompanies([invalid1]));  // should return 'Visa'
 console.log('test idInvalidCardCompanies', idInvalidCardCompanies(batch));       // should return invalid card companies
 
-// Removes spaces and hyphens from a given string
-const removeNonDigits = numberString => numberString.split('').filter(digit => (digit !== ' ' && digit !== '-'));
+// Removes every character except a digit from a given string
+const removeNonDigits = numberString => numberString.split('').filter(digit => (digit >= '0' && digit <= '9'));
 // Test removeNonDigits
 console.log('test removeNonDigits: ', removeNonDigits('4368290078651875'));     // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
 console.log('test removeNonDigits: ', removeNonDigits('4368 2900 7865 1875'));  // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
 console.log('test removeNonDigits: ', removeNonDigits('4368-2900-7865-1875'));  // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
+console.log('test removeNonDigits: ', removeNonDigits('4368&2900&7865&1875'));  // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
 
 // Converts string with credit card number to array of numbers
 const cardStringToNumber = numberString => {
@@ -118,7 +119,6 @@ const cardStringToNumber = numberString => {
 }
 // Test cardStringToNumber
 console.log('test cardStringToNumber: ', cardStringToNumber(removeNonDigits('4368290078651875')));    // should return [4, 3, 6, 8, 2, 9, 0, 0, 7, 8, 6, 5, 1, 8, 7, 5]
-console.log('test cardStringToNumber: ', cardStringToNumber(removeNonDigits('4368&2900&7865&1875'))); // should return undefined
 
 // Converts invalid numbers to valid numbers
 const convertInvalidCardToValidCard = invalidCard => {
