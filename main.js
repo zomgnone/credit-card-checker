@@ -136,3 +136,16 @@ const calculateCardCheckDigit = card => {
 };
 // Test
 console.log(calculateCardCheckDigit(valid1)); // should return 8 (last element of valid1 array)
+
+// Converts invalid numbers to valid numbers
+const convertInvalidCardToValidCard = invalidCard => {
+  const correctCheckDigit = calculateCardCheckDigit(invalidCard);
+  const correctCard = invalidCard;
+  correctCard.pop();
+  correctCard.push(correctCheckDigit);
+  return correctCard;
+};
+// Test convertInvalidCardToValidCard
+console.log(validateCred(convertInvalidCardToValidCard(invalid1))); // should return true
+console.log(validateCred(convertInvalidCardToValidCard(valid2)));   // should return true
+console.log(validateCred(convertInvalidCardToValidCard(mystery1))); // should return true
