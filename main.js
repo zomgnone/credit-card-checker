@@ -24,27 +24,31 @@ const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, inval
 
 
 // Add your functions below:
-const validateCred = (ccNumIn) => {
-  let multiplyByTwoFlag = false;
-  let multiplyByTwoResult = 0;
+// Calculate card check number (Luhn algorithm)
+const calculateCardCheckDigit = card => {
+  const len = card.length;
+  //let sum = card[len-2];
   let sum = 0;
-  for (let i = ccNumIn.length-1; i >= 0; i--) {
-    if (multiplyByTwoFlag) {
-      multiplyByTwoResult = ccNumIn[i] * 2;
-      if (multiplyByTwoResult > 9) {
-        multiplyByTwoResult -= 9;
+  const parity = (len - 2) % 2;
+  for (let i = 0; i < len - 1; i++) {
+    let digit = card[i];
+    if (i % 2 === parity) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
       }
-      sum += multiplyByTwoResult;
-    } else {
-      sum += ccNumIn[i];
     }
-    multiplyByTwoFlag = !multiplyByTwoFlag;
+    sum += digit;
   }
-  return (sum % 10 === 0) ? true : false;
+  return 10 - (sum % 10);
 };
-// Test validateCred()
-console.log(validateCred(valid1));    // should return true
-console.log(validateCred(invalid1));  // should return false
+// Test calculateCardCheckDigit
+console.log('test calculateCardCheckDigit: ', calculateCardCheckDigit(valid1)); // should return 8 (last element of valid1 array)
+
+const validateCred = ccNumIn => calculateCardCheckDigit(ccNumIn) === ccNumIn[ccNumIn.length-1];
+// Test validateCred
+console.log('test validateCred: ', validateCred(valid1));    // should return true
+console.log('test validateCred: ', validateCred(invalid1));  // should return false
 
 const findInvalidCards = (batchIn) => {
   const invalidCards = [];
@@ -56,8 +60,8 @@ const findInvalidCards = (batchIn) => {
   return invalidCards;
 };
 // Test findInvalidCards();
-console.log(findInvalidCards([valid1, valid2, valid2, valid3, valid4]));            // should be empty
-console.log(findInvalidCards([invalid1, invalid2, invalid3, invalid4, invalid5]));  // should return all invalid arrays
+console.log('test findInvalidCards', findInvalidCards([valid1, valid2, valid2, valid3, valid4]));            // should be empty
+console.log('test findInvalidCards', findInvalidCards([invalid1, invalid2, invalid3, invalid4, invalid5]));  // should return all invalid arrays
 
 const idInvalidCardCompanies = (invalidCards) => {
   const invalidIssuers = [];
@@ -91,15 +95,15 @@ const idInvalidCardCompanies = (invalidCards) => {
   return invalidIssuers;
 };
 // Test idInvalidCardCompanies
-console.log(idInvalidCardCompanies([invalid1]));  // should return 'Visa'
-console.log(idInvalidCardCompanies(batch));       // should return invalid card companies
+console.log('test idInvalidCardCompanies', idInvalidCardCompanies([invalid1]));  // should return 'Visa'
+console.log('test idInvalidCardCompanies', idInvalidCardCompanies(batch));       // should return invalid card companies
 
 // Removes spaces and hyphens from a given string
 const removeNonDigits = numberString => numberString.split('').filter(digit => (digit !== ' ' && digit !== '-'));
 // Test removeNonDigits
-console.log(removeNonDigits('4368290078651875'));     // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
-console.log(removeNonDigits('4368 2900 7865 1875'));  // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
-console.log(removeNonDigits('4368-2900-7865-1875'));  // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
+console.log('test removeNonDigits: ', removeNonDigits('4368290078651875'));     // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
+console.log('test removeNonDigits: ', removeNonDigits('4368 2900 7865 1875'));  // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
+console.log('test removeNonDigits: ', removeNonDigits('4368-2900-7865-1875'));  // should return ['4', '3', '6', '8', '2', '9', '0', '0', '7', '8', '6', '5', '1', '8', '7', '5']
 
 // Converts string with credit card number to array of numbers
 const cardStringToNumber = numberString => {
@@ -113,29 +117,8 @@ const cardStringToNumber = numberString => {
   return numberString.map(Number);
 }
 // Test cardStringToNumber
-console.log(cardStringToNumber(removeNonDigits('4368290078651875')));    // should return [4, 3, 6, 8, 2, 9, 0, 0, 7, 8, 6, 5, 1, 8, 7, 5]
-console.log(cardStringToNumber(removeNonDigits('4368&2900&7865&1875'))); // should return undefined
-
-// Calculate card check number (Luhn algorithm)
-const calculateCardCheckDigit = card => {
-  const len = card.length;
-  //let sum = card[len-2];
-  let sum = 0;
-  const parity = (len - 2) % 2;
-  for (let i = 0; i < len - 1; i++) {
-    let digit = card[i];
-    if (i % 2 === parity) {
-      digit *= 2;
-      if (digit > 9) {
-        digit -= 9;
-      }
-    }
-    sum += digit;
-  }
-  return 10 - (sum % 10);
-};
-// Test
-console.log(calculateCardCheckDigit(valid1)); // should return 8 (last element of valid1 array)
+console.log('test cardStringToNumber: ', cardStringToNumber(removeNonDigits('4368290078651875')));    // should return [4, 3, 6, 8, 2, 9, 0, 0, 7, 8, 6, 5, 1, 8, 7, 5]
+console.log('test cardStringToNumber: ', cardStringToNumber(removeNonDigits('4368&2900&7865&1875'))); // should return undefined
 
 // Converts invalid numbers to valid numbers
 const convertInvalidCardToValidCard = invalidCard => {
@@ -146,6 +129,6 @@ const convertInvalidCardToValidCard = invalidCard => {
   return correctCard;
 };
 // Test convertInvalidCardToValidCard
-console.log(validateCred(convertInvalidCardToValidCard(invalid1))); // should return true
-console.log(validateCred(convertInvalidCardToValidCard(valid2)));   // should return true
-console.log(validateCred(convertInvalidCardToValidCard(mystery1))); // should return true
+console.log('test convertInvalidCardToValidCard: ', validateCred(convertInvalidCardToValidCard(invalid1))); // should return true
+console.log('test convertInvalidCardToValidCard: ', validateCred(convertInvalidCardToValidCard(valid2)));   // should return true
+console.log('test convertInvalidCardToValidCard: ', validateCred(convertInvalidCardToValidCard(mystery1))); // should return true
