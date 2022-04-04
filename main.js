@@ -115,3 +115,24 @@ const cardStringToNumber = numberString => {
 // Test cardStringToNumber
 console.log(cardStringToNumber(removeNonDigits('4368290078651875')));    // should return [4, 3, 6, 8, 2, 9, 0, 0, 7, 8, 6, 5, 1, 8, 7, 5]
 console.log(cardStringToNumber(removeNonDigits('4368&2900&7865&1875'))); // should return undefined
+
+// Calculate card check number (Luhn algorithm)
+const calculateCardCheckDigit = card => {
+  const len = card.length;
+  //let sum = card[len-2];
+  let sum = 0;
+  const parity = (len - 2) % 2;
+  for (let i = 0; i < len - 1; i++) {
+    let digit = card[i];
+    if (i % 2 === parity) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
+      }
+    }
+    sum += digit;
+  }
+  return 10 - (sum % 10);
+};
+// Test
+console.log(calculateCardCheckDigit(valid1)); // should return 8 (last element of valid1 array)
