@@ -92,4 +92,25 @@ const idInvalidCardCompanies = (invalidCards) => {
 };
 // Test idInvalidCardCompanies
 console.log(idInvalidCardCompanies([invalid1]));  // should return 'Visa'
-console.log(idInvalidCardCompanies(batch));        // should return invalid card companies
+console.log(idInvalidCardCompanies(batch));       // should return invalid card companies
+
+// Converts string with credit card number to array of numbers
+const cardStringToNumber = (numberString) => {
+  // Check for whitespace
+  if (numberString.indexOf(' ') != -1) {
+    console.log('String should not contain whitespace');
+    return;
+  }
+  // Check for invalid digits. 0 is a special case (it is a boolean false)
+  for (char of numberString) {
+    if (!Number(char) && char !== '0') {
+      console.log('String should only contain digits 0-9');
+      return;
+    }
+  }
+  return numberString.split('').map(Number);
+}
+// Test cardStringToNumber
+console.log(cardStringToNumber('4368290078651875'));    // should return [4, 3, 6, 8, 2, 9, 0, 0, 7, 8, 6, 5, 1, 8, 7, 5]
+console.log(cardStringToNumber('4368 2900 7865 1875')); // should return undefined
+console.log(cardStringToNumber('4368-2900-7865-1875')); // should return undefined
